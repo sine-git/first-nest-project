@@ -1,0 +1,65 @@
+/* eslint-disable prettier/prettier */
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
+import { AppController } from './app.controller';
+import { AppService } from './app.service';
+import { UserModule } from './user/user.module';
+import { TodoModule } from './todo/todo.module';
+import { SkillModule } from './skill/skill.module';
+import { SkillFirstMiddleware } from './skill/middlewares/skill.first.middleware';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import configuration from '../src/configs/configurations';
+import devConfiguration from './configs/configuration.dev';
+import prodConfiguration from './configs/configuration.prod';
+import * as dotenv from 'dotenv';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { TodoEntity } from './todo/entities/todo.entity';
+
+dotenv.config()
+@Module({
+  imports: [UserModule, TodoModule, SkillModule,
+    ConfigModule.forRoot({
+      load: [process.env.ENV == 'DEV' ? devConfiguration : prodConfiguration],
+      isGlobal: true
+    }),
+    /* TypeOrmModule.forRoot(
+      {
+        type: 'mysql',
+        host: process.env.BD_HOST,
+        port: Number(process.env.BD_PORT) || 3306,
+        username: process.env.DB_USERNAME,
+        password: process.env.DB_PASSWORD,
+        synchronize: true,
+        entities: []
+
+      }
+    ), */
+    TypeOrmModule.forRootAsync(
+      {
+        inject: [ConfigService],
+        useFactory: (config: ConfigService) => ({
+          type: 'mysql',
+          host: config.get('database.host'),
+          port: Number(config.get('database.port')) || 3306,
+          username: config.get('database.username'),
+          password: config.get('database.password'),
+          database: config.get('database.name'),
+          synchronize: true,
+          //entities: [TodoEntity]
+          autoLoadEntities: true
+        })
+      }
+    )
+  ],
+  controllers: [AppController],
+  providers: [
+    /*   {
+        provide: APP_FILTER,
+        useClass: SkillExceptionFilter
+      }, */
+    AppService],
+})
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(SkillFirstMiddleware).forRoutes('skill');
+  }
+}

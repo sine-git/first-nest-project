@@ -1,0 +1,15 @@
+export default () => ({
+    database: {
+        name: "jsonplaceholder",
+        label: "Prod database",
+        host: "localhost",
+        port: 3306,
+        username: "root",
+        password: "Janvier1998",
+    },
+    server: {
+        name: "Prod Server",
+        host: "localhost",
+        port: "3000"
+    }
+})
