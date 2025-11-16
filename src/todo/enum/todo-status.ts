@@ -1,3 +1,8 @@
 export enum TodoStatus {
-    'Pending', 'In Progress', 'Completed', 'On Hold', 'Cancelled', 'Blocked'
+    PENDING = 'Pending',
+    IN_PROGRESS = 'In Progress',
+    COMPLETED = 'Completed',
+    ON_HOLD = 'On Hold',
+    CANCELLED = 'Cancelled',
+    BLOCKED = 'Blocked'
 }

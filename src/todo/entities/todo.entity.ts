@@ -19,7 +19,7 @@ export class TodoEntity {
     @Column()
     completed: boolean
 
-    @Column({ type: 'enum', enum: TodoStatus, default: TodoStatus.Pending })
+    @Column({ type: 'enum', enum: TodoStatus, default: TodoStatus.PENDING })
     status: TodoStatus
     @CreateDateColumn(
         {

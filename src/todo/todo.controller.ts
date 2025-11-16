@@ -8,6 +8,8 @@ import { FusionPipe } from './pipes/fusion-pipe';
 import { TodoCreateDto } from './todo.dto';
 import { TodoUpdateDto } from './dtos/todo.update.dto';
 import { TodoStatus } from './enum/todo-status';
+import { isEnum } from 'class-validator';
+import { TodoFindDto } from './dtos/todo.find.dto';
 
 @Controller({
     path: 'todo',
@@ -22,8 +24,16 @@ export class TodoController {
         return this.todoService.test()
     }
     @Get('/find')
-    findTodo(@Query('value') value: string, @Query('status') status: TodoStatus) {
-        return this.todoService.find(value, status)
+    findTodo(@Query() todoFindDto: TodoFindDto) {
+        return this.todoService.find(todoFindDto)
+    }
+    @Get('/find-and-count')
+    findAndCount(@Body() condition: any) {
+        return this.todoService.findAndCount(condition)
+    }
+    @Get('find-by-ids')
+    findByIds(@Body() ids: number[]) {
+        return this.todoService.findByIds(ids)
     }
     @Get()
     getTodos(): TodoModel[] {

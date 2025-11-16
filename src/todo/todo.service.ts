@@ -4,14 +4,18 @@ import { TodoModel } from './todo.model';
 
 import { TodoCreationDto } from './dtos/todo.creation.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { LessThan, Like, Repository } from 'typeorm';
+import { In, LessThan, Like, Repository } from 'typeorm';
 import { TodoEntity } from './entities/todo.entity';
 import { TodoUpdateDto } from './dtos/todo.update.dto';
 import { TodoStatus } from './enum/todo-status';
+import { TodoFindDto } from './dtos/todo.find.dto';
 
 
 @Injectable()
 export class TodoService {
+    async findByIds(ids: number[]) {
+        return await this.todoRepository.findBy({ id: In(ids) });
+    }
 
     todos: TodoModel[] = [];
     currentId: number = 1;
@@ -55,13 +59,25 @@ export class TodoService {
 
     }
 
-    async find(value: string, status: TodoStatus) {
+    async find(todoFindDto: TodoFindDto) {
+
         const result = await this.todoRepository.find({
-            where: [{
-                title: Like(`%${value}%`), status: status
+            where: [
+                {
+                    status: todoFindDto.status
+                },
+               /*  {
+                title: Like(`%${todoFindDto.value}%`), status: todoFindDto.status
             }, {
-                description: Like(`%${value}%`), status: status
-            }]
+                description: Like(`%${todoFindDto.value}%`), status: todoFindDto.status
+            } */]
+        })
+        return result
+    }
+
+    async findAndCount(condition: any) {
+        const result = await this.todoRepository.findAndCount({
+            where: condition
         })
         return result
     }
