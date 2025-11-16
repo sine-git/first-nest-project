@@ -10,6 +10,7 @@ import { TodoUpdateDto } from './dtos/todo.update.dto';
 import { TodoStatus } from './enum/todo-status';
 import { isEnum } from 'class-validator';
 import { TodoFindDto } from './dtos/todo.find.dto';
+import { TodoPageDto } from './dtos/todo.page.dto';
 
 @Controller({
     path: 'todo',
@@ -19,13 +20,39 @@ import { TodoFindDto } from './dtos/todo.find.dto';
 export class TodoController {
     constructor(private todoService: TodoService) {
     }
+    @Get('/count-by-status')
+    countByStatus() {
+        return this.todoService.countByStatus()
+    }
+    @Get('/query')
+    queryTodo() {
+        return this.todoService.query()
+    }
+
+    @Get('/query-builder')
+    queryBuilder() {
+        return this.todoService.queryBuilder()
+    }
     @Get('/test-find')
     testTodo() {
         return this.todoService.test()
     }
+    @Get('/find-one/:id')
+    findOne(id: number) {
+        return this.todoService.findOne(id)
+    }
     @Get('/find')
     findTodo(@Query() todoFindDto: TodoFindDto) {
         return this.todoService.find(todoFindDto)
+    }
+    @Get('/find')
+    @Version('2')
+    findTodo2(@Query() todoFindDto: TodoFindDto) {
+        return this.todoService.find2(todoFindDto)
+    }
+    @Get('/find-page')
+    findPage(@Query() todoPageDto: TodoPageDto) {
+        return this.todoService.findPage(todoPageDto)
     }
     @Get('/find-and-count')
     findAndCount(@Body() condition: any) {
