@@ -24,6 +24,12 @@ export class TodoService {
 
     todos: TodoModel[] = [];
     currentId: number = 1;
+
+    testService() {
+        const value = 1
+        const result = value + 10
+        console.log(`The result is ${result}`)
+    }
     async findByIds(ids: number[]) {
         return await this.todoRepository.findBy({ id: In(ids) });
     }

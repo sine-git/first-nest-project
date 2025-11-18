@@ -7,15 +7,20 @@ import * as morgan from 'morgan'
 import { RequestDurationInterceptor } from './skill/interceptors/skill-request-duration.interceptor';
 import { DataInterceptor } from './common/interceptors/data-interceptor';
 import * as dotenv from 'dotenv'
+import { TodoService } from './todo/todo.service';
 dotenv.config()
 async function bootstrap() {
 
-  const app = await NestFactory.create(AppModule);
+  /* const app = await NestFactory.createApplicationContext(AppModule)
+  const service = app.get(TodoService)
+  await service.testService()
+  await app.close() */
   const coresOption = {
     origin: [
       'http://localhost:4200'
     ]
   }
+  const app = await NestFactory.create(AppModule);
   app.useGlobalPipes(new ValidationPipe({
     // eslint-disable-next-line prettier/prettier
     //transform: true, 

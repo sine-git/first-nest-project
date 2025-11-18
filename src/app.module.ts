@@ -3,6 +3,7 @@ import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UserModule } from './user/user.module';
+import { CvModule } from './cv/cv.module';
 import { TodoModule } from './todo/todo.module';
 import { SkillModule } from './skill/skill.module';
 import { SkillFirstMiddleware } from './skill/middlewares/skill.first.middleware';
@@ -13,6 +14,7 @@ import prodConfiguration from './configs/configuration.prod';
 import * as dotenv from 'dotenv';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { TodoEntity } from './todo/entities/todo.entity';
+
 
 dotenv.config()
 @Module({
@@ -48,7 +50,8 @@ dotenv.config()
           autoLoadEntities: true
         })
       }
-    )
+    ),
+    CvModule
   ],
   controllers: [AppController],
   providers: [

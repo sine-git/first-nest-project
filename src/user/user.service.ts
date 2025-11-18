@@ -1,48 +1,26 @@
 import { Injectable } from '@nestjs/common';
-import { UserModel } from './user.model';
-import { firstValueFrom, Observable } from 'rxjs';
-import { HttpService } from '@nestjs/axios';
+import { CreateUserDto } from './dto/create-user.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
 
 @Injectable()
 export class UserService {
+  create(createUserDto: CreateUserDto) {
+    return 'This action adds a new user';
+  }
 
-    constructor(private http: HttpService) {
+  findAll() {
+    return `This action returns all user`;
+  }
 
-    }
-    public getUser(id: number): UserModel {
-        let user = new UserModel(1, "Leanne Graham", "Bret", "Sincere@april.biz");
-        return user
-    }
+  findOne(id: number) {
+    return `This action returns a #${id} user`;
+  }
 
-    async testMethod() {
+  update(id: number, updateUserDto: UpdateUserDto) {
+    return `This action updates a #${id} user`;
+  }
 
-        const response = await firstValueFrom(this.http.get("https://jsonplaceholder.typicode.com/posts"))
-
-        /*  const observable = new Observable((subscribe) => {
-             subscribe.next("Hello");
-             console.log('....');
-             setTimeout(
-                 () => {
-                     subscribe.next("Comment vas tu ?");
-                     console.log('....');
-                 }, 1000
-             );
-             setTimeout(
-                 () => {
-                     subscribe.next("Je vais très bien");
-                     console.log('....');
-                 }, 1000
-             );
-             setTimeout(
-                 () => {
-                     subscribe.next("Et toi?");
-                     console.log('....');
-                 }, 1000
-             );
-         });
-         observable.subscribe((value) => {
-             console.log(value);
-         }); */
-        return response.data;
-    }
+  remove(id: number) {
+    return `This action removes a #${id} user`;
+  }
 }
