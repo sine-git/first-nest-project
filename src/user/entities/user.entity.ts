@@ -1,5 +1,5 @@
 import { Cv } from "src/cv/entities/cv.entity";
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { AfterLoad, Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity('user')
 export class User {
@@ -15,7 +15,13 @@ export class User {
     @Column()
     password: string
 
-    @OneToMany(() => Cv, (cv) => cv.user)
+    @OneToMany(() => Cv, (cv) => cv.user, { eager: true })
     cvs: Cv[]
+
+    @AfterLoad()
+    logUser() {
+        //console.log('The loaded user his ', this)
+
+    }
 
 }

@@ -14,11 +14,14 @@ import prodConfiguration from './configs/configuration.prod';
 import * as dotenv from 'dotenv';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { TodoEntity } from './todo/entities/todo.entity';
+import { MulterModule } from '@nestjs/platform-express';
+import { FileModule } from './file/file.module';
 
 
 dotenv.config()
 @Module({
   imports: [UserModule, TodoModule, SkillModule,
+    MulterModule.register({}),
     ConfigModule.forRoot({
       load: [process.env.ENV == 'DEV' ? devConfiguration : prodConfiguration],
       isGlobal: true
@@ -47,11 +50,15 @@ dotenv.config()
           database: config.get('database.name'),
           synchronize: true,
           //entities: [TodoEntity]
-          autoLoadEntities: true
+          autoLoadEntities: true,
+          cache: {
+            duration: 5000
+          }
         })
       }
     ),
-    CvModule
+    CvModule,
+    FileModule
   ],
   controllers: [AppController],
   providers: [
