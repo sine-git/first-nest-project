@@ -10,7 +10,7 @@ import { diskStorage, memoryStorage } from 'multer';
 export class FileController {
   constructor(private readonly fileService: FileService) { }
 
-  @Post()
+  @Post('upload-file')
   @UseInterceptors(FileInterceptor('file', {
     storage: memoryStorage(),
     /* storage: diskStorage({
@@ -24,42 +24,29 @@ export class FileController {
     } */
   }))
   updloadFile(@UploadedFile('file') file: Express.Multer.File, @Body('body') body: any) {
-    const localFile = file
-    /* const rows = file.buffer.toString('utf-8').split('\n')
-    rows.forEach((row => {
-      console.log(row)
-    })) */
-
+    //const localFile = file
+    return this.fileService.processFile(file)
   }
-  /* @Post()
-  @UseInterceptors(FileInterceptor('file', {
-    storage:
-      diskStorage({
-        destination: '/Users/traore080908/Desktop/Tutos/NestJS/files',
-        filename: (req, file, cb) => {
-          const unique = uuidv4();
-          const extension = file.originalname.split('.').pop();
-          cb(null, `${unique}.${extension}`);
-        },
-      })
 
-
-    ,
-    fileFilter: (req, file, cb) => {
-      cb(null, true); // accepte tous les fichiers
-    },
-
-  }))
-  uploadFile(@UploadedFile(
-  ) file: Express.Multer.File, @Body() body) {
-    const uploadedFile = file
-    const response = {
-      originalFileName: file.originalname,
-      fileName: file.fieldname
+  @Post('upload-video')
+  @UseInterceptors(
+    FileInterceptor('video', {
+      storage: diskStorage({
+        destination: '/Users/Desktop/Tutos/NestJS/files/outputs/video',
+        filename: (req, video, callBack) => {
+          callBack(null, `video_${video.filename}`)
+        }
+      }),
+      limits: {
+        fileSize: 1024 * 1024 * 1024
+      }
+    }))
+  uploadVideo(
+    @UploadedFile() video: Express.Multer.File
+  ) {
+    return {
+      status: 200,
+      message: `${video.filename} has been successfully updated`
     }
-
-    return response
   }
-
- */
 }
