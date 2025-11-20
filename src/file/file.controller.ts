@@ -1,15 +1,13 @@
-import { Body, Controller, Post, UploadedFile, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Get, Post, Req, Res, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { FileService } from './file.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 //import { editFileName } from './file.functions';
-import { Express } from 'express';
-import { v4 as uuidv4 } from 'uuid';
+import { Request, Response, Express } from 'express'
 import { diskStorage, memoryStorage } from 'multer';
 
 @Controller('file')
 export class FileController {
   constructor(private readonly fileService: FileService) { }
-
   @Post('upload-file')
   @UseInterceptors(FileInterceptor('file', {
     storage: memoryStorage(),
@@ -32,9 +30,9 @@ export class FileController {
   @UseInterceptors(
     FileInterceptor('video', {
       storage: diskStorage({
-        destination: '/Users/Desktop/Tutos/NestJS/files/outputs/video',
+        destination: '/Users/traore080908/Desktop/Tutos/NestJS/files/outputs/video',
         filename: (req, video, callBack) => {
-          callBack(null, `video_${video.filename}`)
+          callBack(null, `video_${video.originalname}`)
         }
       }),
       limits: {
@@ -49,4 +47,9 @@ export class FileController {
       message: `${video.filename} has been successfully updated`
     }
   }
+  @Get('/stream-video')
+  streamVideo(@Req() request: Request, @Res() response: Response) {
+    return this.fileService.streamVideo(request, response)
+  }
+
 }
