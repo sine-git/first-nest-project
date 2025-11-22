@@ -1,3 +1,4 @@
+import { SignOptions } from './../node_modules/@types/jsonwebtoken/index.d';
 /* eslint-disable prettier/prettier */
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { AppController } from './app.controller';
@@ -20,6 +21,7 @@ import { WebsocketGatewayServerModule } from './file/websocketgatewayserver/webs
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { AuthModule } from './auth/auth.module';
+import { PassportModule } from '@nestjs/passport';
 
 
 
@@ -69,7 +71,17 @@ dotenv.config()
     CvModule,
     FileModule,
     AuthModule,
+    PassportModule.registerAsync(
 
+      {
+        inject: [ConfigService],
+        useFactory: (config: ConfigService) => ({
+          secret: config.get('jwt.secret'),
+          signOptions: {
+            expiresIn: 3600
+          }
+        })
+      }),
   ],
   controllers: [AppController],
   providers: [

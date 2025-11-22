@@ -1,26 +1,31 @@
-import { Injectable } from '@nestjs/common';
-import { CreateAuthDto } from './dto/create-auth.dto';
-import { UpdateAuthDto } from './dto/update-auth.dto';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { AuthDto } from './dto/auth.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { User } from 'src/user/entities/user.entity';
+import { Repository } from 'typeorm';
+import * as bcrypt from 'bcrypt'
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class AuthService {
-  create(createAuthDto: CreateAuthDto) {
-    return 'This action adds a new auth';
+  constructor(
+    @InjectRepository(User) private readonly userRepository: Repository<User>
+    , private jwtService: JwtService) {
   }
-
-  findAll() {
-    return `This action returns all auth`;
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} auth`;
-  }
-
-  update(id: number, updateAuthDto: UpdateAuthDto) {
-    return `This action updates a #${id} auth`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} auth`;
+  async authenticate(authDto: AuthDto) {
+    const dbUser = await this.userRepository.findOneBy({
+      username: authDto.username,
+    })
+    if (!dbUser)
+      throw new NotFoundException('Invalid username or password !!')
+    const hashedPassword = await bcrypt.hash(authDto.password, dbUser.salt)
+    if (hashedPassword != dbUser.password)
+      throw new NotFoundException('Invalid username or password !!')
+    const payload = {
+      username: dbUser.username,
+      email: dbUser.email,
+    }
+    const token = this.jwtService.sign(payload)
+    return token;
   }
 }

@@ -14,6 +14,8 @@ export class User {
 
     @Column()
     password: string
+    @Column()
+    salt: string
 
     @OneToMany(() => Cv, (cv) => cv.user, { eager: true })
     cvs: Cv[]

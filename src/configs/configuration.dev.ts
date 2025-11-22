@@ -12,5 +12,10 @@ export default () => ({
         name: "Dev server",
         host: "localhost",
         port: "3000"
+    },
+    jwt: {
+        secret: "JWT_SECRET"
     }
+
+
 })
