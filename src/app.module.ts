@@ -19,6 +19,7 @@ import { FileModule } from './file/file.module';
 import { WebsocketGatewayServerModule } from './file/websocketgatewayserver/websocketgatewayserver.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
+import { AuthModule } from './auth/auth.module';
 
 
 
@@ -67,6 +68,7 @@ dotenv.config()
     ),
     CvModule,
     FileModule,
+    AuthModule,
 
   ],
   controllers: [AppController],
