@@ -16,15 +16,23 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { TodoEntity } from './todo/entities/todo.entity';
 import { MulterModule } from '@nestjs/platform-express';
 import { FileModule } from './file/file.module';
+import { WebsocketGatewayServerModule } from './file/websocketgatewayserver/websocketgatewayserver.module';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
+
+
 
 
 dotenv.config()
 @Module({
-  imports: [UserModule, TodoModule, SkillModule,
+  imports: [UserModule, TodoModule, SkillModule, WebsocketGatewayServerModule,
     MulterModule.register({}),
     ConfigModule.forRoot({
       load: [process.env.ENV == 'DEV' ? devConfiguration : prodConfiguration],
       isGlobal: true
+    }),
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', 'public')
     }),
     /* TypeOrmModule.forRoot(
       {
@@ -58,7 +66,8 @@ dotenv.config()
       }
     ),
     CvModule,
-    FileModule
+    FileModule,
+
   ],
   controllers: [AppController],
   providers: [
