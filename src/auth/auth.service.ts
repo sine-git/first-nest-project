@@ -5,12 +5,13 @@ import { User } from 'src/user/entities/user.entity';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt'
 import { JwtService } from '@nestjs/jwt';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class AuthService {
   constructor(
     @InjectRepository(User) private readonly userRepository: Repository<User>
-    , private jwtService: JwtService) {
+    , private jwtService: JwtService, private config: ConfigService) {
   }
   async authenticate(authDto: AuthDto) {
     const dbUser = await this.userRepository.findOneBy({
@@ -25,6 +26,7 @@ export class AuthService {
       username: dbUser.username,
       email: dbUser.email,
     }
+    const secretKey = this.config.get('jwt.secret')
     const token = this.jwtService.sign(payload)
     return token;
   }

@@ -14,8 +14,6 @@ export default () => ({
         port: "3000"
     },
     jwt: {
-        secret: "JWT_SECRET"
+        secret: "e4f1d2c3b5a697887766554433221100ffeeddccbbaa99887766554433221100"
     }
-
-
 })

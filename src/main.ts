@@ -8,6 +8,7 @@ import { RequestDurationInterceptor } from './skill/interceptors/skill-request-d
 import { DataInterceptor } from './common/interceptors/data-interceptor';
 import * as dotenv from 'dotenv'
 import { TodoService } from './todo/todo.service';
+import { AuthGuard } from '@nestjs/passport';
 dotenv.config()
 async function bootstrap() {
 
@@ -32,7 +33,8 @@ async function bootstrap() {
   app.enableVersioning(
     { type: VersioningType.URI }
   )
-  console.log(`Application port is ${process.env.PROJECT_PORT}`)
+  app.useGlobalGuards()
+  //console.log(`Application port is ${process.env.PROJECT_PORT}`)
   await app.listen(process.env.SERVER_PORT);
 }
 bootstrap();

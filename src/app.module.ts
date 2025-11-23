@@ -21,9 +21,9 @@ import { WebsocketGatewayServerModule } from './file/websocketgatewayserver/webs
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { AuthModule } from './auth/auth.module';
-import { PassportModule } from '@nestjs/passport';
-
-
+import { AuthGuard, PassportModule } from '@nestjs/passport';
+import { APP_GUARD } from '@nestjs/core';
+import { JwtAuthGuard } from './auth/jwt/jwt-auth.guard';
 
 
 dotenv.config()
@@ -71,17 +71,9 @@ dotenv.config()
     CvModule,
     FileModule,
     AuthModule,
-    PassportModule.registerAsync(
-
-      {
-        inject: [ConfigService],
-        useFactory: (config: ConfigService) => ({
-          secret: config.get('jwt.secret'),
-          signOptions: {
-            expiresIn: 3600
-          }
-        })
-      }),
+    PassportModule.register({
+      defaultStrategy: 'jwt'
+    }),
   ],
   controllers: [AppController],
   providers: [
@@ -89,6 +81,10 @@ dotenv.config()
         provide: APP_FILTER,
         useClass: SkillExceptionFilter
       }, */
+    {
+      provide: APP_GUARD,
+      useClass: JwtAuthGuard
+    },
     AppService],
 })
 export class AppModule implements NestModule {
