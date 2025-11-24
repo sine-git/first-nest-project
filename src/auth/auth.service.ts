@@ -22,9 +22,12 @@ export class AuthService {
     const hashedPassword = await bcrypt.hash(authDto.password, dbUser.salt)
     if (hashedPassword != dbUser.password)
       throw new NotFoundException('Invalid username or password !!')
+
     const payload = {
       username: dbUser.username,
       email: dbUser.email,
+      role: dbUser.role.key
+
     }
     const secretKey = this.config.get('jwt.secret')
     const token = this.jwtService.sign(payload)

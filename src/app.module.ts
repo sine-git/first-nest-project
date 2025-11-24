@@ -24,6 +24,8 @@ import { AuthModule } from './auth/auth.module';
 import { AuthGuard, PassportModule } from '@nestjs/passport';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './auth/jwt/jwt-auth.guard';
+import { RoleModule } from './role/role.module';
+import { AuthorityModule } from './authority/authority.module';
 
 
 dotenv.config()
@@ -74,6 +76,8 @@ dotenv.config()
     PassportModule.register({
       defaultStrategy: 'jwt'
     }),
+    RoleModule,
+    AuthorityModule,
   ],
   controllers: [AppController],
   providers: [

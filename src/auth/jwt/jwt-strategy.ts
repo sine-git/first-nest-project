@@ -6,6 +6,7 @@ import { Repository } from "typeorm";
 import { ConfigService } from '@nestjs/config';
 import { JwtPayload } from "./jwt-payload";
 import { Injectable, UnauthorizedException } from "@nestjs/common";
+import { Reflector } from "@nestjs/core";
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
@@ -16,14 +17,18 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
         })
     }
     async validate(payLoad: JwtPayload) {
-        console.log(`The user payload is ${payLoad}`)
-        const user = this.userRepository.findOneBy({
-            username: payLoad.username
+        //console.log(`The user payload is ${payLoad}`)
+        const dbUser = await this.userRepository.findOneBy({
+            username: payLoad.username,
         })
-
-        if (!user)
-            throw new UnauthorizedException()
-        return user
+        if (!dbUser)
+            throw new UnauthorizedException('Invalid token for user!!')
+        const user = {}
+        Object.assign(user, {
+            username: dbUser.username,
+            role: dbUser.role.key
+        })
+        return user;
     }
 
 }

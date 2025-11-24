@@ -9,6 +9,7 @@ import { DataInterceptor } from './common/interceptors/data-interceptor';
 import * as dotenv from 'dotenv'
 import { TodoService } from './todo/todo.service';
 import { AuthGuard } from '@nestjs/passport';
+import { JwtAuthGuard } from './auth/jwt/jwt-auth.guard';
 dotenv.config()
 async function bootstrap() {
 
@@ -33,7 +34,7 @@ async function bootstrap() {
   app.enableVersioning(
     { type: VersioningType.URI }
   )
-  app.useGlobalGuards()
+  //app.useGlobalGuards(app.get(JwtAuthGuard))
   //console.log(`Application port is ${process.env.PROJECT_PORT}`)
   await app.listen(process.env.SERVER_PORT);
 }

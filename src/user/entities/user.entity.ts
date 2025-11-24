@@ -1,5 +1,7 @@
+import { Exclude } from "class-transformer";
 import { Cv } from "src/cv/entities/cv.entity";
-import { AfterLoad, Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Role } from "src/role/entities/role.entity";
+import { AfterLoad, Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity('user')
 export class User {
@@ -12,6 +14,7 @@ export class User {
     @Column()
     email: string
 
+    @Exclude()
     @Column()
     password: string
     @Column()
@@ -23,7 +26,11 @@ export class User {
     @AfterLoad()
     logUser() {
         //console.log('The loaded user his ', this)
-
     }
 
+    @ManyToOne(() => Role, (role) => role.users, { eager: true })
+    @JoinColumn({
+        name: 'role_id'
+    })
+    role: Role
 }

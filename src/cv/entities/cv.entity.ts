@@ -29,7 +29,6 @@ export class Cv {
         name: 'cv_skill',
         joinColumn: { name: 'cv_id' },
         inverseJoinColumn: { name: 'skill_id' },
-
     })
     skills: Skill[]
 }
