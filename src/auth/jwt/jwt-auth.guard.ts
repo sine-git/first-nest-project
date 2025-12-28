@@ -22,7 +22,7 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
             context.getHandler(),
             context.getClass()
         ])
-        if (!requiredRoles.includes(user.role)) {
+        if (!requiredRoles?.includes(user.role)) {
             throw new ForbiddenException('Unauthorized to access this ressource...')
         }
         return user

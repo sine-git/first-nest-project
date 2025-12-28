@@ -7,6 +7,7 @@ import { NullInterceptor } from 'src/common/interceptors/null-interceptor';
 import { ConfigService } from '@nestjs/config';
 import { SkillService } from './skill.service';
 import { CreateSkillDto } from './dto/create-skill.dto';
+import { Public } from 'src/auth/jwt/decorators';
 
 //@UsePipes()
 
@@ -25,6 +26,7 @@ export class SkillController {
         return this.skillServce.update(id, updateSkillDto)
     }
 
+    @Public()
     @Get()
     findAll() {
         return this.skillServce.findAll();

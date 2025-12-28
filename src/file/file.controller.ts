@@ -4,6 +4,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 //import { editFileName } from './file.functions';
 import { Request, Response, Express } from 'express'
 import { diskStorage, memoryStorage } from 'multer';
+import { Public } from 'src/auth/jwt/decorators';
 
 @Controller('file')
 export class FileController {
@@ -48,6 +49,7 @@ export class FileController {
     }
   }
   @Get('/stream-video')
+  @Public()
   streamVideo(@Req() request: Request, @Res() response: Response) {
     return this.fileService.streamVideo(request, response)
   }

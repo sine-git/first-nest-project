@@ -20,8 +20,6 @@ export class WebsocketGatewayServer implements OnModuleInit {
     @SubscribeMessage('newMessage')
     handleEvent(@MessageBody() data: string) {
         this.messages.push(data)
-        this.server.emit('New message', this.messages)
+        this.server.emit('New message', data)
     }
-
-
 }
